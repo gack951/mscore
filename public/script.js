@@ -80,7 +80,7 @@ function change_seat(value){
 	seat_display.innerHTML = winds[seat];
 	for(let i=0; i<4; i++){
 		player_displays[i][0].innerHTML=winds[(seat+i)%4]+" "+game.names[(seat+i)%4];
-		if(game.calls[i]){
+		if(game.calls[(seat+i)%4]){
 			player_displays[i][0].classList.add("called");
 		}else{
 			player_displays[i][0].classList.remove("called");
