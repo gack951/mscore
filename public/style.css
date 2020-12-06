@@ -1,0 +1,109 @@
+html {
+	touch-action: manipulation;
+}
+body {
+	margin: 0px;
+}
+div#main {
+	width: 100vw;
+	height: 100vh;
+	font-size: 6vw;
+	line-height: 1.2;
+}
+button {
+	-webkit-tap-highlight-color: transparent;
+	outline: 0;
+	appearance: none;
+	border: 0;
+	border-radius: 1vw;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-left: 1vw;
+	padding-right: 1vw;
+	margin: 0 1vw;
+	height: 5vw;
+	min-width: 5vw;
+	background: #153866;
+	color: #ffffff;
+	font-size: .5em;
+	transition: background 250ms;
+}
+button.hover {
+	background: #91a2b8;
+	transition: none;
+}
+button.disabled {
+	background: #9b9b9b;
+	transition: none;
+}
+select {
+	font-size: .9em;
+}
+
+button.plus_minus {
+	width: 5vw;
+	font-size: .7em;
+}
+
+div#main {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+div#main > div {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+div#main > div#top > div {
+	display: flex;
+	align-items: center;
+}
+div#main > div#top > div#round {
+	justify-content: flex-start;
+}
+div#main > div#top > div#stack {
+	justify-content: center;
+}
+div#main > div#top > div#seat {
+	justify-content: flex-end;
+}
+
+div#main > div#middle {
+	flex-grow: 1;
+	justify-content: space-between;
+	flex-direction: column;
+}
+div#main > div#middle > div {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+div#main > div#middle > div > div {
+	display: flex;
+	justify-content: center;
+}
+div#main > div#middle > div#middle_bottom > div {
+	align-items: flex-end;
+}
+div#main > div#middle > div > div.player_info {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+div#main > div#middle > div > div > span {
+	font-size: .5em;
+}
+div#main > div#middle > div > div > span.called {
+	border-top: solid 2px red;
+}
+div#main > div#middle > div > div > span.score {
+	font-size: .9em;
+}
+
+span#calc_score {
+	width: 20vw;
+}
