@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>mscore</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="style.css" rel="stylesheet" type="text/css" media="all">
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
@@ -11,27 +12,27 @@
 	<div id="main">
 		<div id="top">
 			<div id="round">
-			<button type="button" class="plus_minus" id="round_minus">－</button>
+			<button type="button" class="plus_minus" id="round_minus"><i class="material-icons em-1">remove</i></button>
 			<span id="round_display"></span>局
-			<button type="button" class="plus_minus" id="round_plus">＋</button>
+			<button type="button" class="plus_minus" id="round_plus"><i class="material-icons em-1">add</i></button>
 			</div>
 			<div id="stack">
-			<button type="button" class="plus_minus" id="stack_zero">0</button>
-			<button type="button" class="plus_minus" id="stack_minus">－</button>
+			<button type="button" class="plus_minus" id="stack_zero"><i class="material-icons em-1">exposure_zero</i></button>
+			<button type="button" class="plus_minus" id="stack_minus"><i class="material-icons em-1">remove</i></button>
 			<span id="stack_display"></span>本場
-			<button type="button" class="plus_minus" id="stack_plus">＋</button>
+			<button type="button" class="plus_minus" id="stack_plus"><i class="material-icons em-1">add</i></button>
 			</div>
 			<div id="seat">
-			<button type="button" class="plus_minus" id="seat_minus">－</button>
+			<button type="button" class="plus_minus" id="seat_minus"><i class="material-icons em-1">remove</i></button>
 			<span id="seat_display"></span>
-			<button type="button" class="plus_minus" id="seat_plus">＋</button>
+			<button type="button" class="plus_minus" id="seat_plus"><i class="material-icons em-1">add</i></button>
 			</div>
 		</div>
 		<div id="middle">
 			<div id="middle_top">
 				<div id="middle_top_left">
-					<button type="button" id="reset">リセット</button>
-					<button type="button" id="get">&#x21BB;</button>
+					<button type="button" id="reset"><i class="material-icons em-1">delete_sweep</i></button>
+					<button type="button" id="get"><i class="material-icons em-1">refresh</i></button>
 				</div>
 				<div id="opposite_player_display" class="player_info">
 					<span id="opposite_player_seat_name" class="seat_name"></span>
@@ -53,7 +54,7 @@
 			</div>
 			<div id="middle_bottom">
 				<div id="middle_bottom_left">
-					<button type="button" id="other_func">その他操作</button>
+					<button type="button" id="other_func">点数操作</button>
 				</div>
 				<div id="self_player_display" class="player_info">
 					<span id="self_player_seat_name" class="seat_name"></span>
@@ -76,14 +77,86 @@
 					<option value="3">北</option>
 				</select>
 			</span>
-			<button type="button" class="plus_minus" id="doubles_minus">－</button>
+			<button type="button" class="plus_minus" id="doubles_minus"><i class="material-icons em-1">remove</i></button>
 			<span id="doubles_display"></span>翻
-			<button type="button" class="plus_minus" id="doubles_plus">＋</button>
-			<button type="button" class="plus_minus" id="points_minus">－</button>
+			<button type="button" class="plus_minus" id="doubles_plus"><i class="material-icons em-1">add</i></button>
+			<button type="button" class="plus_minus" id="points_minus"><i class="material-icons em-1">remove</i></button>
 			<span id="points_display"></span>符
-			<button type="button" class="plus_minus" id="points_plus">＋</button>
+			<button type="button" class="plus_minus" id="points_plus"><i class="material-icons em-1">add</i></button>
 			<span id="calc_score"></span>点 
 			<button type="button" id="confirm_mahjong">確定</button>
+		</div>
+	</div>
+	<div id="overlay">
+		<div id="overlay_player_seats_names">
+			<div id="overlay_player0_seat_name"></div>
+			<div id="overlay_player1_seat_name"></div>
+			<div id="overlay_player2_seat_name"></div>
+			<div id="overlay_player3_seat_name"></div>
+			<div id="overlay_table_seat_name"></div>
+			<button type="button" class="overlay_buttons" id="overlay_confirm">確定</button>
+		</div>
+		<div id="overlay_player_scores">
+			<div id="overlay_player0_score"></div>
+			<div id="overlay_player1_score"></div>
+			<div id="overlay_player2_score"></div>
+			<div id="overlay_player3_score"></div>
+			<div id="overlay_table_score"></div>
+			<button type="button" class="overlay_buttons" id="overlay_close">閉じる</button>
+		</div>
+		<div id="overlay_minus_buttons">
+			<div id="overlay_player0_minus_buttons">
+				<button type="button" class="overlay_buttons" id="player0_minus_1000"><i class="material-icons em-1">fast_rewind</i></button>
+				<button type="button" class="overlay_buttons" id="player0_minus_100"><i class="material-icons em-1 rotate180">play_arrow</i></button>
+			</div>
+			<div id="overlay_player1_minus_buttons">
+				<button type="button" class="overlay_buttons" id="player1_minus_1000"><i class="material-icons em-1">fast_rewind</i></button>
+				<button type="button" class="overlay_buttons" id="player1_minus_100"><i class="material-icons em-1 rotate180">play_arrow</i></button>
+			</div>
+			<div id="overlay_player2_minus_buttons">
+				<button type="button" class="overlay_buttons" id="player2_minus_1000"><i class="material-icons em-1">fast_rewind</i></button>
+				<button type="button" class="overlay_buttons" id="player2_minus_100"><i class="material-icons em-1 rotate180">play_arrow</i></button>
+			</div>
+			<div id="overlay_player3_minus_buttons">
+				<button type="button" class="overlay_buttons" id="player3_minus_1000"><i class="material-icons em-1">fast_rewind</i></button>
+				<button type="button" class="overlay_buttons" id="player3_minus_100"><i class="material-icons em-1 rotate180">play_arrow</i></button>
+			</div>
+			<div id="overlay_table_minus_buttons">
+				<button type="button" class="overlay_buttons" id="table_minus_1000"><i class="material-icons em-1">fast_rewind</i></button>
+				<button type="button" class="overlay_buttons" id="table_minus_100"><i class="material-icons em-1 rotate180">play_arrow</i></button>
+			</div>
+			<div>合計:</div>
+		</div>
+		<div id="overlay_diffs">
+			<div id="overlay_player0_diff"></div>
+			<div id="overlay_player1_diff"></div>
+			<div id="overlay_player2_diff"></div>
+			<div id="overlay_player3_diff"></div>
+			<div id="overlay_table_diff"></div>
+			<div id="overlay_diff_total"></div>
+		</div>
+		<div id="overlay_plus_buttons">
+			<div id="overlay_player0_plus_buttons">
+				<button type="button" class="overlay_buttons" id="player0_plus_100"><i class="material-icons em-1">play_arrow</i></button>
+				<button type="button" class="overlay_buttons" id="player0_plus_1000"><i class="material-icons em-1">fast_forward</i></button>
+			</div>
+			<div id="overlay_player1_plus_buttons">
+				<button type="button" class="overlay_buttons" id="player1_plus_100"><i class="material-icons em-1">play_arrow</i></button>
+				<button type="button" class="overlay_buttons" id="player1_plus_1000"><i class="material-icons em-1">fast_forward</i></button>
+			</div>
+			<div id="overlay_player2_plus_buttons">
+				<button type="button" class="overlay_buttons" id="player2_plus_100"><i class="material-icons em-1">play_arrow</i></button>
+				<button type="button" class="overlay_buttons" id="player2_plus_1000"><i class="material-icons em-1">fast_forward</i></button>
+			</div>
+			<div id="overlay_player3_plus_buttons">
+				<button type="button" class="overlay_buttons" id="player3_plus_100"><i class="material-icons em-1">play_arrow</i></button>
+				<button type="button" class="overlay_buttons" id="player3_plus_1000"><i class="material-icons em-1">fast_forward</i></button>
+			</div>
+			<div id="overlay_table_plus_buttons">
+				<button type="button" class="overlay_buttons" id="table_plus_100"><i class="material-icons em-1">play_arrow</i></button>
+				<button type="button" class="overlay_buttons" id="table_plus_1000"><i class="material-icons em-1">fast_forward</i></button>
+			</div>
+			<div id="overlay_diff_total_ok"></div>
 		</div>
 	</div>
 </body>

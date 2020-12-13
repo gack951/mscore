@@ -1,14 +1,20 @@
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+.material-icons.em-1 { font-size: 1em; }
+.material-icons.rotate180 { transform: rotate(180deg); }
 html {
 	touch-action: manipulation;
 }
 body {
 	margin: 0px;
+	font-size: 6vw;
+	line-height: 1.2;
 }
 div#main {
 	width: 100vw;
 	height: 100vh;
-	font-size: 6vw;
-	line-height: 1.2;
 }
 button {
 	-webkit-tap-highlight-color: transparent;
@@ -44,6 +50,13 @@ select {
 button.plus_minus {
 	width: 5vw;
 	font-size: .7em;
+}
+button.overlay_buttons {
+	height: 4vw;
+	font-size: 1em;
+	padding-left: 1vw;
+	padding-right: 1vw;
+	margin: 0 0;
 }
 
 div#main {
@@ -106,4 +119,34 @@ div#main > div#middle > div > div > span.score {
 
 span#calc_score {
 	width: 20vw;
+}
+
+div#overlay {
+	position: absolute;
+	width: 75vw;
+	height: 60vh;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 2vh 1vw;
+	background: #ffffff;
+	box-shadow: 0 0 2vw 0vw rgba(0, 0, 0, .5);
+	display: flex;
+	justify-content: space-between;
+	font-size: .5em;
+}
+div#overlay > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding-left: .5vw;
+	padding-right: .5vw;
+}
+div#overlay > div#overlay_diffs {
+	width: 15vw;
+}
+div#overlay > div#overlay_diffs > div {
+	text-align: center;
 }

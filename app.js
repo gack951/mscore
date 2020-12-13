@@ -10,7 +10,7 @@ let game = {
 	table: 0,	// 供託: 0-
 	names: ["プレイヤー1", "プレイヤー2", "プレイヤー3", "プレイヤー4"],
 	scores: [250, 250, 250, 250],
-	calls: [false, false, false, false],
+	calls: [0, 0, 0, 0],
 }
 
 app.use("/", express.static('public'));
@@ -21,14 +21,14 @@ io.on('connection',socket=>{
 		io.to(socket.id).emit("game", game);
 	});
 	socket.on("reset", ()=>{
-		if(game.round == 0 && game.stack == 0 && game.table == 0 && game.scores.toString() == [250, 250, 250, 250].toString() && game.calls.toString() == [false, false, false, false].toString()){
+		if(game.round == 0 && game.stack == 0 && game.table == 0 && game.scores.toString() == [250, 250, 250, 250].toString() && game.calls.toString() == [0, 0, 0, 0].toString()){
 			game.names = ["プレイヤー1", "プレイヤー2", "プレイヤー3", "プレイヤー4"];
 		}else{
 			game.round = 0;
 			game.stack = 0;
 			game.table = 0;
 			game.scores = [250, 250, 250, 250];
-			game.calls = [false, false, false, false];
+			game.calls = [0, 0, 0, 0];
 		}
 		io.emit("game", game);
 	});
@@ -58,7 +58,7 @@ io.on('connection',socket=>{
 	socket.on("stack", value=>{
 		if(value==1){
 			game.stack += 1;
-		}else if(value==-1){
+		}else if(value==-1 && game.stack>0){
 			game.stack -= 1;
 		}else if(value==0){
 			game.stack =0;

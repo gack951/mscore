@@ -1,8 +1,9 @@
 let socket = io();
-let game, seat = 0, doubles = 1, points_idx = 2, mahjong_calculating = 0, self_mahjong_calculating = 0;
-let round_display, stack_display, table_display, seat_display, player_displays, doubles_display, points_display, calc_score;
+let game, seat = 0, doubles = 1, points_idx = 2, mahjong_calculating = 0, self_mahjong_calculating = 0, overlay_diff = {scores: [0,0,0,0], table: 0, calls: [0,0,0,0]};
+let round_display, stack_display, table_display, seat_display, player_displays, doubles_display, points_display, calc_score, discard_seat, overlay_display;
 const points_numbers = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110], score_max = [0, 20, 20, 20, 20, 20, 30, 30, 40, 40, 40, 60, 60, 80];
 const winds = ["東", "南", "西", "北"];
+window.addEventListener("DOMContentLoaded", ()=>$("div#overlay").hide());
 window.onload = ()=>{
 	round_display = $("#round_display")[0];
 	stack_display = $("#stack_display")[0];
@@ -11,7 +12,8 @@ window.onload = ()=>{
 	doubles_display = $("#doubles_display")[0];
 	points_display = $("#points_display")[0];
 	calc_score = $("#calc_score")[0];
-	player_displays = [$("#self_player_display").children(), $("#right_player_display").children(), $("#opposite_player_display").children(), $("#left_player_display").children()];
+	discard_seat = $("select#discard_seat")[0];
+	player_displays = [$("#self_player_display").children("span"), $("#right_player_display").children("span"), $("#opposite_player_display").children("span"), $("#left_player_display").children("span")];
 	$("button").on({"touchstart":(e)=>$(e.target).addClass("hover"), "touchend":(e)=>$(e.target).removeClass("hover")});
 	$("button#round_minus").on("touchstart", ()=>socket.emit("round", -1));
 	$("button#round_plus").on("touchstart", ()=>socket.emit("round", 1));
@@ -37,6 +39,32 @@ window.onload = ()=>{
 			socket.emit("name", {seat: seat, name: name});
 		}
 	});
+	$("button#other_func").on("touchstart", ()=>{
+		overlay_diff = {scores: [0,0,0,0], table: 0, calls: game.calls.slice()};
+		render_game();
+		$("div#overlay").show();
+	});
+	$("button#overlay_confirm").on("touchstart", ()=>{
+		let overlay_diff_total = overlay_diff.scores.reduce((s,c)=>s+c)+overlay_diff.table;
+		if(overlay_diff_total==0){
+			socket.emit("point", overlay_diff);
+			$("div#overlay").hide();
+		}
+	});
+	$("button#overlay_close").on("touchstart", ()=>{
+		$("div#overlay").hide();
+	});
+	for(let i=0; i<4; i++){
+		$("button#player"+String(i)+"_minus_1000").on("touchstart", ()=>{overlay_diff.scores[i]-=10; render_game()});
+		$("button#player"+String(i)+"_minus_100").on("touchstart", ()=>{overlay_diff.scores[i]-=1; render_game()});
+		$("button#player"+String(i)+"_plus_100").on("touchstart", ()=>{overlay_diff.scores[i]+=1; render_game()});
+		$("button#player"+String(i)+"_plus_1000").on("touchstart", ()=>{overlay_diff.scores[i]+=10; render_game()});
+		$("div#overlay_player"+String(i)+"_seat_name").on("touchstart", ()=>{overlay_diff.calls[i]^=1; render_game()});
+	}
+	$("button#table_minus_1000").on("touchstart", ()=>{overlay_diff.table-=10; render_game()});
+	$("button#table_minus_100").on("touchstart", ()=>{overlay_diff.table-=1; render_game()});
+	$("button#table_plus_100").on("touchstart", ()=>{overlay_diff.table+=1; render_game()});
+	$("button#table_plus_1000").on("touchstart", ()=>{overlay_diff.table+=10; render_game()});
 	socket.on("game", g=>{
 		// console.log(g);
 		game = g;
@@ -59,17 +87,17 @@ function render_game(){
 	if(mahjong_calculating || self_mahjong_calculating){
 		$("button#confirm_mahjong").removeClass("disabled");
 		if(mahjong_calculating){
-			$("select#discard_seat")[0].disabled=false;
+			discard_seat.disabled=false;
 		}else{
-			$("select#discard_seat")[0].value=-1;
-			$("select#discard_seat")[0].disabled=true;
+			discard_seat.value=-1;
+			discard_seat.disabled=true;
 		}
 	}else{
 		$("button#confirm_mahjong").addClass("disabled");
-		$("select#discard_seat")[0].value=-1;
-		$("select#discard_seat")[0].disabled=true;
+		discard_seat.value=-1;
+		discard_seat.disabled=true;
 	}
-	let [ret, diff]=calc_mahjong_score(!mahjong_calculating, seat, points_idx, doubles, parseInt($("select#discard_seat")[0].value));
+	let [ret, diff]=calc_mahjong_score(!mahjong_calculating, seat, points_idx, doubles, parseInt(discard_seat.value));
 	if(ret == 0){
 		calc_score.innerHTML = diff.scores[seat]+"00";
 	}
@@ -79,13 +107,33 @@ function change_seat(value){
 	seat=(seat+value)%4;
 	seat_display.innerHTML = winds[seat];
 	for(let i=0; i<4; i++){
-		player_displays[i][0].innerHTML=winds[(seat+i)%4]+" "+game.names[(seat+i)%4];
+		player_displays[i][0].innerHTML=winds[(seat+i)%4]+" "+game.names[(seat+i)%4]+(i==0?'<i class="material-icons em-1">edit</i>':'');
+		$("div#overlay_player"+String(i)+"_seat_name").html(winds[i]+" "+game.names[i]);
+		$("div#overlay_player"+String(i)+"_score").html(game.scores[i]*100);
+		$("div#overlay_player"+String(i)+"_diff").html((overlay_diff.scores[i]>0?"+":"")+overlay_diff.scores[i]*100);
+		if(overlay_diff.calls[i]){
+			$("div#overlay_player"+String(i)+"_seat_name").css("borderLeft", "solid 5px red");
+		}else{
+			$("div#overlay_player"+String(i)+"_seat_name").css("borderLeft", "solid 5px white");
+		}
 		if(game.calls[(seat+i)%4]){
 			player_displays[i][0].classList.add("called");
 		}else{
 			player_displays[i][0].classList.remove("called");
 		}
-		player_displays[i][1].innerHTML=game.scores[(seat+i)%4]+"00";
+		player_displays[i][1].innerHTML = game.scores[(seat+i)%4]*100;
+	}
+	$("div#overlay_table_seat_name").html("供託");
+	$("div#overlay_table_score").html(game.table*100);
+	$("div#overlay_table_diff").html((overlay_diff.table>0?"+":"")+overlay_diff.table*100);
+	let overlay_diff_total = overlay_diff.scores.reduce((s,c)=>s+c)+overlay_diff.table;
+	$("div#overlay_diff_total").html((overlay_diff_total>0?"+":"")+overlay_diff_total*100);
+	if(overlay_diff_total==0){
+		$("div#overlay_diff_total_ok").html("OK");
+		$("button#overlay_confirm").removeClass("disabled");
+	}else{
+		$("div#overlay_diff_total_ok").html("NG");
+		$("button#overlay_confirm").addClass("disabled");
 	}
 }
 function calc_mahjong_score(is_self, seat, points_idx, doubles, target = -1){
@@ -132,7 +180,6 @@ function calc_mahjong_score(is_self, seat, points_idx, doubles, target = -1){
 function confirm_mahjong(){
 	let diff;
 	if($("button#confirm_mahjong").hasClass("disabled") || (!self_mahjong_calculating && !mahjong_calculating)){
-		alert("not calculating");
 		return;
 	}
 	if(self_mahjong_calculating){	// ツモ
