@@ -196,12 +196,14 @@ function confirm_mahjong(){
 			return;
 		}
 		let ret;
-		[ret, diff] = calc_mahjong_score(false, seat, points_idx, doubles, target);
+		[ret, diff] = calc_mahjong_score(false, seat, points_idx, doubles, (seat+target)%4);
 		if(ret < 0){
 			alert("illegal seat or point");
 			return;
 		}
 	}
 	diff.calls=[false,false,false,false];
+	self_mahjong_calculating=false;
+	mahjong_calculating=false;
 	socket.emit("point", diff);
 }
